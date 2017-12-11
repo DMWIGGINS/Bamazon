@@ -1,0 +1,27 @@
+{
+  "name": "bamazon",
+  "version": "1.0.0",
+  "description": "An app using mysql and inquirer to mimic an online shopping experience.",
+  "main": "bamazonCustomer.js",
+  "scripts": {
+    "test": "na"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DMWIGGINS/Bamazon.git"
+  },
+  "keywords": [
+    "products",
+    "tables"
+  ],
+  "author": "Doreen Wiggins",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DMWIGGINS/Bamazon/issues"
+  },
+  "homepage": "https://github.com/DMWIGGINS/Bamazon#readme",
+  "dependencies": {
+    "inquirer": "^4.0.1",
+    "mysql": "^2.15.0"
+  }
+}
