@@ -24,7 +24,6 @@ function queryAllProducts() {
         console.log("Here is a list of items for sale.");
         console.log("----------------------------------");
         for (var i = 0; i < res.length; i++) {
-            // allProducts.push(res[i].product_name);
             console.log("Product Name: " + res[i].product_name);
             console.log("Item number: " + res[i].item_id);
             console.log("Price: $" + (res[i].price).toFixed(2));
@@ -82,7 +81,7 @@ function buyItem() {
                                     }
                                 ]);
 
-                            // alers customer if not enough in stock
+                            // alerts customer if not enough in stock
 
                         } else {
                             console.log("Insufficient quantity available to fill this order.");
