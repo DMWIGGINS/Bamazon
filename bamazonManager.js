@@ -61,46 +61,113 @@ function lowInventory() {
         console.log("------------------------------------------------------");
         for (var i = 0; i < res.length; i++) {
             if (res[i].stock_quantity < 5) {
+                var itemMatch = 1;
+
                 console.log("Product Name: " + res[i].product_name);
                 console.log("Item Number: " + res[i].item_id);
                 console.log("Quantity in Stock: " + res[i].stock_quantity);
                 console.log("----------------------------------------------");
             }
         };
+        if (itemMatch != 1) {
+            console.log("There are no products with less than 5 in stock.");
+        };
+
+    });
+
+};
+
+function addInventory() {
+    connection.query("SELECT * FROM products", function (error, results) {
+        if (error) throw err;
+        inquirer
+            .prompt([{
+                    type: "list",
+                    message: "Please select product to add inventory.",
+                    name: "productname",
+                    choices: function () {
+                        var products = [];
+                        for (var i = 0; i < results.length; i++) {
+                            products.push(results[i].product_name);
+                        }
+                        return products;
+                    }
+                },
+                {
+                    type: "input",
+                    message: "How many would you like to add?",
+                    name: "addinventory"
+                }
+            ])
+
+            .then(function (answer) {
+
+                for (var i = 0; i < results.length; i++) {
+                    if (results[i].product_name === answer.productname) {
+                        newInventoryTotal = results[i].stock_quantity + parseInt(answer.addinventory);
+                    }
+                };
+                connection.query(
+                    "UPDATE products SET ? WHERE ?", [{
+                            stock_quantity: newInventoryTotal
+                        },
+                        {
+                            product_name: answer.productname
+                        }
+                    ],
+                    function (error) {
+                        if (error) throw err;
+                        console.log("Inventory of " + answer.productname + " has been changed to " + newInventoryTotal + ".");
+                    }
+                )
+            });
     });
 };
 
-
-
-function addInventory() {
+function addNewProduct() {
+    console.log("Follow the prompts to create new inventory item.")
     inquirer
         .prompt([{
                 type: "input",
-                message: "Please enter name of product to add inventory.",
+                message: "Please enter the id of the new item.",
+                name: "itemid"
+            },
+            {
+                type: "input",
+                message: "Please enter the product name of the new item.",
                 name: "productname"
             },
             {
                 type: "input",
-                message: "How many would you like to add?",
-                name: "addinventory"
-            }
+                message: "Please enter a department for the new item.",
+                name: "department"
+            },
+            {
+                type: "input",
+                message: "Please enter the price of the new item.",
+                name: "price"
+            },
+            {
+                type: "input",
+                message: "Please enter the initial inventory of the new item.",
+                name: "quantity"
+            },
         ])
+
         .then(function (answer) {
-                connection.query("SELECT * FROM products", function (err, res) {
-
-
-
-
-
-
-                            // function addNewProduct()
-                            // List a set of menu options:
-                            // View Products for Sale
-                            // View Low Inventory
-                            // Add to Inventory
-                            // Add New Product
-                            // If a manager selects View Products for Sale, the app should list every available item: the item IDs, names, prices, and quantities.
-                            // If a manager selects View Low Inventory, then it should list all items with an inventory count lower than five.
-                            // If a manager selects Add to Inventory, your app should display a prompt that will let the manager "add more" of any item currently in the store.
-                            // If a manager selects Add New Product, it should allow the manager to add a completely new product to the store.
-                            // setTimeout(managerMenu, 500);
+            connection.query(
+                "INSERT INTO products SET ?", {
+                    item_id: answer.itemid,
+                    product_name: answer.productname,
+                    department_name: answer.department,
+                    price: answer.price,
+                    stock_quantity: answer.quantity
+                },
+                function (err) {
+                    if (err) throw err;
+                    console.log("Item successfully added.");
+                }
+            );
+        })
+};
+setTimeout(managerMenu, 500);
