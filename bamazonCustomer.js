@@ -5,7 +5,7 @@ var inquirer = require("inquirer");
 // create connection to mysql to store, get and manipulate information
 var connection = mysql.createConnection({
     host: "localhost",
-    port: 3306,
+    port: 3000,
     user: "root",
     password: "root",
     database: "bamazonDB"
@@ -19,10 +19,13 @@ connection.connect(function (err) {
 
 // function to show all products sold along with their item number and price per the mysql products database
 function queryAllProducts() {
+    // get all products with all info from database
     connection.query("SELECT * FROM products", function (err, res) {
         console.log("Welcome to Bamazon!");
         console.log("Here is a list of items for sale.");
         console.log("----------------------------------");
+
+        // display each product and related info
         for (var i = 0; i < res.length; i++) {
             console.log("Product Name: " + res[i].product_name);
             console.log("Item number: " + res[i].item_id);
@@ -97,9 +100,9 @@ function buyItem() {
             });
         });
 };
-
+ 
 // calls queryAllProducts to list items automatically when program is run
 queryAllProducts();
 
-// calls buyItem to run after a half second delay to prevent it from running before the AllProducts list is shown
+// calls buyItem to run after a half second delay to prevent it from running before the connection is made and the           AllProducts list is shown
 setTimeout(buyItem, 500);

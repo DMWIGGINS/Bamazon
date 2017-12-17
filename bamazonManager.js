@@ -5,7 +5,7 @@ var inquirer = require("inquirer");
 // create connection to mysql to store, get and manipulate information
 var connection = mysql.createConnection({
     host: "localhost",
-    port: 3306,
+    port: 3000,
     user: "root",
     password: "root",
     database: "bamazonDB"
@@ -13,10 +13,11 @@ var connection = mysql.createConnection({
 
 // show id of successful connection or if error connecting throw error 
 connection.connect(function (err) {
-    if (err) throw err;
+    if (err) throw err
     console.log("connected as id " + connection.threadId);
 })
 
+// function managerMenu to give the user the four options to choose from
 function managerMenu() {
     inquirer
         .prompt([{
@@ -25,6 +26,9 @@ function managerMenu() {
             name: "managerchoice",
             choices: ["View Products", "Low Inventory", "Add Inventory", "Add New Product"]
         }])
+
+        // run appropriate function based on what user has selected above
+
         .then(function (answer) {
             if (answer.managerchoice === "View Products") {
                 viewProducts();
@@ -38,12 +42,16 @@ function managerMenu() {
         });
 };
 
+// if user chooses viewProducts we will pull product data for all products in our mysql table and display it
 function viewProducts() {
+
+    // get all products from table and go through them all displaying each piece of info 
 
     connection.query("SELECT * FROM products", function (err, res) {
 
-        for (var i = 0; i < res.length; i++) {
+        // throw err if error
 
+        for (var i = 0; i < res.length; i++) {
             console.log("Product Name: " + res[i].product_name);
             console.log("Item Number: " + res[i].item_id);
             console.log("Department: " + res[i].department_name);
@@ -54,15 +62,22 @@ function viewProducts() {
     });
 };
 
+// for lowInventory we get info from mysql database about which items have less than 5 in stock and display that info
 function lowInventory() {
-    connection.query("SELECT * FROM products", function (err, res) {
 
+    // gather all product info from mysql table
+
+    connection.query("SELECT * FROM products", function (err, res) {
         console.log("These items have less than five in available inventory");
         console.log("------------------------------------------------------");
+
+        // check each products inventory for those with less than 5
+
         for (var i = 0; i < res.length; i++) {
             if (res[i].stock_quantity < 5) {
                 var itemMatch = 1;
 
+                // display information about products found with less than 5
                 console.log("Product Name: " + res[i].product_name);
                 console.log("Item Number: " + res[i].item_id);
                 console.log("Quantity in Stock: " + res[i].stock_quantity);
@@ -70,6 +85,9 @@ function lowInventory() {
             }
         };
         if (itemMatch != 1) {
+
+            // return message if there are no products with less than 5 in stock
+
             console.log("There are no products with less than 5 in stock.");
         };
 
@@ -77,8 +95,15 @@ function lowInventory() {
 
 };
 
+// addInventory walks the user through choosing the product to add to from a list and then asking how many items to add
 function addInventory() {
+
+    // start by getting products from database so we can use them to make our list of selections 
+
     connection.query("SELECT * FROM products", function (error, results) {
+
+        // show if 
+        
         if (error) throw err;
         inquirer
             .prompt([{
@@ -98,15 +123,23 @@ function addInventory() {
                     message: "How many would you like to add?",
                     name: "addinventory"
                 }
+            
             ])
+
+            // we take the answer chosen and compare it to the results to find the product that we want to update
 
             .then(function (answer) {
 
                 for (var i = 0; i < results.length; i++) {
                     if (results[i].product_name === answer.productname) {
+
+                        // adding new inventory to existing 
+                        
                         newInventoryTotal = results[i].stock_quantity + parseInt(answer.addinventory);
                     }
                 };
+                // connecting to mysql and updating the item inventory 
+
                 connection.query(
                     "UPDATE products SET ? WHERE ?", [{
                             stock_quantity: newInventoryTotal
@@ -116,7 +149,13 @@ function addInventory() {
                         }
                     ],
                     function (error) {
+
+                        // show if error
+
                         if (error) throw err;
+
+                        // show user the new total inventory of the product
+
                         console.log("Inventory of " + answer.productname + " has been changed to " + newInventoryTotal + ".");
                     }
                 )
@@ -124,8 +163,12 @@ function addInventory() {
     });
 };
 
+// addNewProduct allows user to add a brand new product to the store
 function addNewProduct() {
     console.log("Follow the prompts to create new inventory item.")
+
+    // we will prompt the user for the new product information
+
     inquirer
         .prompt([{
                 type: "input",
@@ -154,6 +197,7 @@ function addNewProduct() {
             },
         ])
 
+        // we take the answers and send it to mysql to be inserted as a new line in our products table
         .then(function (answer) {
             connection.query(
                 "INSERT INTO products SET ?", {
@@ -164,10 +208,18 @@ function addNewProduct() {
                     stock_quantity: answer.quantity
                 },
                 function (err) {
+
+                    // show if error
+
                     if (err) throw err;
+
+                    // let the user know that the new item has been added to the table successsfully
+                    
                     console.log("Item successfully added.");
                 }
             );
         })
 };
+
+// we tell the function managerMenu to run but delay it 1/2 second so the connection to mysql has time to be established
 setTimeout(managerMenu, 500);
