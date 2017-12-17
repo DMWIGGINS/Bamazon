@@ -70,9 +70,7 @@ function buyItem() {
                             var productId = parseInt(answer.productid);
                             console.log("Your order has been placed.");
                             console.log("Your order total is  $" + totalCost.toFixed(2) + ".");
-                            console.log(itemsLeft);
-                            console.log(productId);
-
+                            
                             // updates resulting inventory in products database
 
                             connection.query(
