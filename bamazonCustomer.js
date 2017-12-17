@@ -65,6 +65,7 @@ function buyItem() {
                         // checks to see if there is enough inventory to fulfill customer order
 
                         if ((res[i].stock_quantity - parseInt(answer.quantity) >= 0)) {
+         
                             var itemsLeft = res[i].stock_quantity - parseInt(answer.quantity);
                             var totalCost = parseInt(answer.quantity) * res[i].price;
                             var productId = parseInt(answer.productid);

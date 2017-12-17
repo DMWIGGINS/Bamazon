@@ -103,7 +103,7 @@ function addInventory() {
     connection.query("SELECT * FROM products", function (error, results) {
 
         // show if 
-        
+
         if (error) throw err;
         inquirer
             .prompt([{
@@ -123,7 +123,7 @@ function addInventory() {
                     message: "How many would you like to add?",
                     name: "addinventory"
                 }
-            
+
             ])
 
             // we take the answer chosen and compare it to the results to find the product that we want to update
@@ -134,7 +134,7 @@ function addInventory() {
                     if (results[i].product_name === answer.productname) {
 
                         // adding new inventory to existing 
-                        
+
                         newInventoryTotal = results[i].stock_quantity + parseInt(answer.addinventory);
                     }
                 };
@@ -173,27 +173,47 @@ function addNewProduct() {
         .prompt([{
                 type: "input",
                 message: "Please enter the id of the new item.",
-                name: "itemid"
+                name: "itemid",
+                // requiring something to be entered
+                validate: function (input) {
+                    return input !== "";
+                }
             },
             {
                 type: "input",
                 message: "Please enter the product name of the new item.",
-                name: "productname"
+                name: "productname",
+                // requiring something to be entered
+                validate: function (input) {
+                    return input !== "";
+                }
             },
             {
                 type: "input",
                 message: "Please enter a department for the new item.",
-                name: "department"
+                name: "department",
+                // requiring something to be entered
+                validate: function (input) {
+                    return input !== "";
+                }
             },
             {
                 type: "input",
                 message: "Please enter the price of the new item.",
-                name: "price"
+                name: "price",
+                // requiring something to be entered
+                validate: function (input) {
+                    return input !== "";
+                }
             },
             {
                 type: "input",
                 message: "Please enter the initial inventory of the new item.",
-                name: "quantity"
+                name: "quantity",
+                // requiring something to be entered
+                validate: function (input) {
+                    return input !== "";
+                }
             },
         ])
 
@@ -214,7 +234,7 @@ function addNewProduct() {
                     if (err) throw err;
 
                     // let the user know that the new item has been added to the table successsfully
-                    
+
                     console.log("Item successfully added.");
                 }
             );

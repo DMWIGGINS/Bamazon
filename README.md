@@ -27,16 +27,23 @@ Accessing Bamazon as a manager using bamazonManager.js will display a manager me
 1. View Products
   + Displays a list of all products in inventory and all related information from the database.
 
+[View Products](https://www.screencast.com/t/z8vcp3sh)
+
 2. Low Inventory
   + Returns a list of all products with less than 5 items in inventory, along with the item id and the actual number on hand.
 
+[Low Inventory](https://www.screencast.com/t/19au9xKT)
+
 3. Add Inventory
-  + Allows the manager to select a product and then add to it's inventory count. A confirmation message is returned with the product and new inventory that has been updated in the database.
+  + Allows the manager to select a product and then add to it's inventory count. 
+  + A confirmation message is returned with the product and new inventory that has been updated in the database.
 
+[Add Inventory](https://www.screencast.com/t/2JugtRr6)
 4. Add New Product
-  + Prompts the manager to add item id, name of product, department it will listed under, sales price and initial inventory. A success message is returned when the database has been updated.
+  + Prompts the manager to add item id, name of product, department it will listed under, sales price and initial inventory. 
+  + A success message is returned when the database has been updated with the new product information.
 
-
+[Add Inventory](https://www.screencast.com/t/ioAEBhMYo)
 
 
 
